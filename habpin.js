@@ -61,7 +61,7 @@ function showConnections(connections) {
 	    		end=typeof pos.endDate != 'undefined' ? pos.endDate.month+"/"+pos.endDate.year : "present";
 	    		start=typeof pos.startDate != 'undefined' ? pos.startDate.month+"/"+pos.startDate.year: "unknown";
 	    		$('<p id=p2nd>'+pos.company.name+' : '+ pos.title+ ' : ' + start + " to " + end+ '</p>').appendTo("#sales");
-	    	})
+	    	});
 	    	$('<br>').appendTo("#sales");
 	    }
     });
