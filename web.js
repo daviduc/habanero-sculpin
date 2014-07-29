@@ -34,8 +34,8 @@ app.use( function (request, response,next) {
 	    response.end();
 	}
     } else if (request.method == "GET" && ( request.url == '/' || regex_html.test(request.url) )) {
-	response.writeHead(200,{'Content-Type':'text/html','Content-Length':fs.statSync('kwyk1.html').size});
-	response.write(fs.readFileSync('kwyk1.html',{encoding:'utf8'},function(err,data) {if(err) console.log(err);}));
+	response.writeHead(200,{'Content-Type':'text/html','Content-Length':fs.statSync('habpin.html').size});
+	response.write(fs.readFileSync('habpin.html',{encoding:'utf8'},function(err,data) {if(err) console.log(err);}));
 	response.end();
     }
     console.log(request.url+' ending response');
