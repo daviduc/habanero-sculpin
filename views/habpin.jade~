@@ -1,0 +1,12 @@
+extends layout/main.jade
+
+append head_style
+  title habpin
+append head_script
+  script(type="text/javascript" src="javascripts/habpin.js")
+append center_body
+  span(data-dojo-type="dijit/layout/TabContainer" style="min-width: 1em; min-height: 1em; height: 100%; width: 100%;" controllerwidget="dijit.layout.TabController")  
+    div(data-dojo-type="dijit/layout/ContentPane" title="#{tab1_name}" extractcontent="false" preventcache="false" preload="false" refreshonshow="false" selected="true" closable="false" dolayout="false")
+      script(type="text/javascript" src="item_store.js")
+      table(data-dojo-type="gridx/Grid" onModulesLoaded="update_prices()" style="min-width: 1em; min-height: 1em; width: 100%; height: 100%;" data-dojo-props="cacheClass: 'gridx/core/model/cache/Async',structure:[{width:'auto',name:'Item',field:'title'},{width:'auto',name:'Description',field:'description'}],store:item_store")
+    div(data-dojo-type="dijit/layout/ContentPane"  title="#{tab2_name}" extractcontent="false" preventcache="false" preload="false" refreshonshow="false" selected="true" closable="false" dolayout="false")

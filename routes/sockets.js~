@@ -1,0 +1,24 @@
+var io = require('socket.io');
+var debug=require('debug')('generic-three');
+
+exports.initialize=function(server) {
+    io=io.listen(server);
+    io.sockets.on("connection", function(socket) {
+	debug("connected to G3 Server");
+	socket.send(JSON.stringify(
+	    {type:'serverMessage',
+	     message: 'Welcome from G3 Server via Socket IO'}
+	));
+	socket.on('message',function(message) {
+	    debug('G3 server received message');
+	    message=JSON.parse(message);
+	    if(message.type=="userMessage") {
+		socket.broadcast.send(JSON.stringify(message));
+		message.type="myMessage";
+		socket.send(JSON.stringify(message));
+	    } else if (message.type=="serverMessage") {
+		debug('received message from server acting as client to G3 server');
+	    }
+	});
+    });
+};

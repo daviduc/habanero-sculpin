@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+var debug = require('debug')('habpin');
+var app = require('../app');
+
+app.set('port', process.env.PORT_HABANERO);
+
+var server = app.listen(app.get('port'), function() {
+  debug('Express server listening on port ' + server.address().port);
+});
+
+server.on("connection", function(socket) {
+  debug("connected to habpin Server");
+});
+
+server.on('message',function(message) {
+  debug('habpin server received message');
+  message=JSON.parse(message);
+  if(message.type=="userMessage") {
+    server.broadcast.send(JSON.stringify(message));
+    message.type="myMessage";
+    server.send(JSON.stringify(message));
+  } else if (message.type=="serverMessage") {
+      debug('received message from server acting as client to habpin server');
+  }
+});
+
+

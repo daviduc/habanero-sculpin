@@ -1,10 +1,73 @@
-/*
- * This file is provided for custom JavaScript logic that your HTML files might need.
- * Maqetta includes this JavaScript file by default within HTML pages authored in Maqetta.
- */
-require(["dojo/ready"], function(ready){
-     ready(function(){
-         // logic that requires that Dojo is fully initialized should go here
+var express = require('express.io');
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var passport=require('passport');
+var session=require('express-session');
+var routes = require('./routes/index');
+var users = require('./routes/users');
 
-     });
+var app = express();
+app.http().io();
+
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({secret:'mysessionsecret', resave:true, saveUninitialized:true}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+//single page web app
+app.use('/', routes);
+//user admin page
+app.use('/users', users);
+//special routing
+var special_routes = require('./routes/routing')(app,passport);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
+
+// error handlers
+
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', {
+            message: err.message,
+            error: err
+        });
+    });
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: {}
+    });
+});
+
+
+module.exports = app;
+
+
