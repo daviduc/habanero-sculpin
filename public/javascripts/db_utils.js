@@ -14,7 +14,7 @@ var assert=require('assert');
 function test_mongo() {
 /*    mongo_client.connect(process.env.MONGOHQ_URL, function(err, db) {
 	// operate on the collection named "test"                                                                                                                                                             
-	var collection = db.collection('kwyk1.accounts');
+	var collection = db.collection('habanero.accounts');
 	// remove all records in collection (if any)                                                                                                                                                          
 	db.collectionNames(function(err,names) {console.log(names); });
 	console.log('removing documents...');

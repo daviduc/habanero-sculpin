@@ -23,12 +23,12 @@ general_func=function(request,response,next) {
            && !regex_dojo_dijit.test(request.url) && !regex_dojo_gridx.test(request.url)) {
             js_func(request,response);
         }
-	next();
+	//next();
     } else if (request.method == "GET" && regex_css.test(request.url)) {
         if(!regex_dijit_claro.test(request.url)) {
             css_func(request,response);
         }
-	next();
+	//next();
     } else if (request.method == "GET" && ( request.url == '/' || regex_html.test(request.url) )) {
         response.render('habpin', {tab1_name:'items',tab2_name:'preferences'});
         //keep the below group for reference
@@ -36,7 +36,7 @@ general_func=function(request,response,next) {
         //response.write(fs.readFileSync('habpin.html',{encoding:'utf8'},function(err,data) {if(err) console.log(err);}));
         //response.end();
     }
-    //next();
+    next();
 };
 response_common=function(request,response,content_type) {
     response.set('Content-Type',content_type);
@@ -65,6 +65,6 @@ routes_habanero= [{'method':'use','path':'','func': general_func},
 
 routes_habanero.forEach(function(route) { route.path ? router[route.method](route.path,route.func) : router[route.method](route.func);});
 
-//router.get('/',function(request, response) {db_utils.test_mongo();});
+router.get('/',function(request, response) {/*db_utils.test_mongo();*/});
 
 module.exports = router;
