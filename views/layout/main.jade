@@ -13,7 +13,9 @@ html(xmlns="http://www.w3.org/1999/xhtml")
     block head_script
       script(type="text/javascript" src="javascripts/jquery-2.1.1.min.js")
       script(type="text/javascript" src="/socket.io/socket.io.js")
-      //script io=io.connect();
+      script.
+        io=io.connect();
+        io.emit('ready');
       script(type="text/javascript" src="lib/dojo/dojo/dojo.js" data-dojo-config="'parseOnLoad':true,'async':true,'packages':[{'name':'gridx','location':'../gridx'},{'name':'clipart','location':'../../clipart'},{'name':'maqettaSamples','location':'../../../samples'},{'name':'maqetta','location':'../../maqetta'},{'name':'shapes','location':'../../shapes'},{'name':'zazl','location':'../../zazl'},{'name':'widgets','location':'../../custom'}],'themeMap':[['Android','',['themes/android/android.css']],['BlackBerry','',['themes/blackberry/blackberry.css']],['iPad','',['themes/ipad/ipad.css']],['iPhone','',['themes/iphone/iphone.css']],['.*','',['themes/iphone/iphone.css']]],'mblThemeFiles':[],'mblLoadCompatPattern':''")
       script(type="text/javascript").
         console.log('require is ' + typeof require);

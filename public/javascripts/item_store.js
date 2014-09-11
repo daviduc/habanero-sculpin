@@ -1,8 +1,29 @@
-//var observer_handle;
-var item_store;
-//var local_results;
-var button_value="$4.99";
-var aspect=require(["dojo/aspect"]);
+var item_store,orig_store,query_store;
+var item_grid;
+var item_store_elements;
+
+require(['dojo/store/Memory'],initialize_store);
+
+io.on('list_items', function(data) {
+    item_store_elements=JSON.parse(data.message);
+    pop_item_store(item_store_elements);
+});
+
+io.emit('get_items', {message:JSON.stringify({name:'constitution ale'})});
+
+//items need to be an array of JSON obj
+function pop_item_store(items) {
+    var desc;
+    //var remove_list = item_store.data.map(function(rec) { return rec.id;});
+    orig_store.idProperty='id';
+    //for(var i =0; i<remove_list.length; i++) item_store.remove(remove_list[i]);
+    items.forEach(function(item) {
+        desc='<button type="button" onclick="createAccountsGrid()">'+item.last_price+'</button>';
+        orig_store.put({id:item._id,name:item.item_name, company_name: item.company_name, default_price:item.def_price, description: desc, last_price:item.last_price},{overwrite:true});
+    });
+
+};
+
 
 function initialize_store(mem_class) {
     //perform some initialization of new Memory instance
@@ -15,36 +36,31 @@ function initialize_store(mem_class) {
     });
 };
 
-try {
-    require(['dojo/store/Memory'],initialize_store);
-} catch(err) {console.log(err)};
-
 
 function store_ready(store) {
     console.log('store is ' + typeof store);
-    item_store=store;
-    //aspect.after(item_store,onModulesLoaded, console.log("inside aspect.after"),true);
-    //item_store.put({id:'item_0',title:'sculpin',description:'<button type="button" onclick="console.log(\'handler for test button\')">TEST</button>'});
-    item_store.put({id:'item_0',title:'sculpin',description:'<button id="sculpin_button" type="button" onclick="createAccountsGrid()"></button>'});
-    item_store.put({id:'item_1',title:'nitro frantic',description:'<button id="nitrofrantic_button" type="button" onclick="createAccountsGrid()"></button>'});
-    item_store.put({id:'item_2',title:'youngs stout',description:'<button id="youngsstout_button" type="button" onclick="createAccountsGrid()"></button>'});
-    item_store.put({id:'item_3',title:'red chair',description:'<button id="redchair_button" type="button" onclick="createAccountsGrid()"></button>'});
-    
+    item_store=query_store=orig_store=store;
+    query_store = orig_store.query({id:/.*/}); //query for everything to produce observable result set that includes all
+    query_store.idProperty='id';
+    query_store.observe(store_observer,true);
+
 };
 
 function store_observer(object, removedFrom, insertedInto) {
-    console.log('changed object id is ' + object.id);
-    console.log('removedFrom is ' + removedFrom);
-    console.log('insertedInto is ' + insertedInto);
+    //console.log('changed object id is ' + object.id);
+    //console.log('removedFrom is ' + removedFrom);
+    //console.log('insertedInto is ' + insertedInto);
+    item_store.idProperty='id';
+    item_store.put(object,{overwrite:true});
+    item_grid =dijit.byId('items_table');
+    item_grid.model.clearCache();
+    item_grid.model.setStore(item_store);
+    item_grid.body.refresh();
 
 };
 
 function update_prices() {
-    $("#sculpin_button").html(button_value);
-    $("#nitrofrantic_button").html(button_value);
-    $("#youngsstout_button").html(button_value);
-    $("#redchair_button").html(button_value);
-    
+    console.log('update_prices called');
 };
 
 
